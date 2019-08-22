@@ -36,7 +36,7 @@ self.__precacheManifest = [
     "url": "/golf/static/css/main.4ef61134.chunk.css"
   },
   {
-    "revision": "28a7a11aef2a03d639b407e110900b0b",
+    "revision": "ebaff6455d49f0c498b0369b93ab46d7",
     "url": "/golf/index.html"
   }
 ];

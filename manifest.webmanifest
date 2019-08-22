@@ -1,11 +1,11 @@
 {
-  "name": "golf",
+  "name": "golf game simulator",
   "short_name": "golf",
   "start_url": "./",
   "scope": ".",
   "display": "standalone",
-  "background_color": "#fdfdfd",
-  "description": "Couch gaming platform",
+  "background_color": "#ffffff",
+  "description": "Couch gaming platform, golf",
   "icons": [
     {
       "src": "images/logo48.png",
