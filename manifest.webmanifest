@@ -1,7 +1,7 @@
 {
-  "name": "golf simulator",
+  "name": "golf",
   "short_name": "golf",
-  "start_url": "/",
+  "start_url": "https://mannfeldt.github.io/golf/",
   "display": "standalone",
   "background_color": "#fdfdfd",
   "description": "Couch gaming platform",
