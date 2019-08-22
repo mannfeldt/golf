@@ -1,7 +1,7 @@
 {
-  "name": "Stagehoot",
-  "short_name": "Stagehoot",
-  "start_url": "https://mannfeldt.github.io/stagehoot/",
+  "name": "golf",
+  "short_name": "golf",
+  "start_url": "https://mannfeldt.github.io/golf",
   "display": "standalone",
   "background_color": "#fdfdfd",
   "description": "Couch gaming platform",
