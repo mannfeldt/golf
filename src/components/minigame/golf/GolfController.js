@@ -40,9 +40,9 @@ const styles = (theme) => ({
     marginTop: "-4px",
   },
   clubwrapper: {
-    height: "50vh",
+    height: "49vh",
     width: "10vw",
-    marginTop: "-55vh",
+    bottom: "210px",
     position: "absolute",
   },
   clubiconWrapper: {
@@ -117,14 +117,10 @@ function drawDistance(x, y, distance) {
   ctx.fillText(`Distance: ${distance} yards`, x, y);
 }
 function drawScoreText(x, y, player, strokes) {
-  ctx.font = "22px roboto";
+  ctx.font = "20px roboto";
   ctx.fillStyle = "#000000";
   ctx.textAlign = "center";
-  ctx.fillText(
-    `You scored with ${strokes} strokes in ${player.scoreTime} seconds`,
-    x,
-    y
-  );
+  ctx.fillText(`${strokes} strokes in ${player.scoreTime} seconds`, x, y);
 }
 function clearCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -630,24 +626,24 @@ class GolfController extends Component {
               value={highestAcceleration / 2}
             />
           </div>
-          <button
+          {/* <button
             style={{ position: "absolute", top: "0", left: "0" }}
             type="button"
             onClick={this.testSwing}
           >
             swing
-          </button>
+          </button> */}
           <Button
             onClick={() => this.saveFindMyBall()}
-            variant="contained"
+            variant="outlined"
+            size="small"
             style={{
               position: "absolute",
-              top: "60px",
+              top: "38px",
               left: "0",
-              opacity: "0.85",
             }}
           >
-            Find my ball
+            Find ball
           </Button>
         </div>
       </div>
