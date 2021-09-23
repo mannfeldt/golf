@@ -24,6 +24,7 @@ import putterIcon from "./img/putterIcon.svg";
 import golfbagIcon from "./img/golfbag.svg";
 import fingerprintIcon from "./img/fingerprint.svg";
 import skyImage from "./img/sky.png";
+import Slider from "@material-ui/core/Slider";
 
 const styles = (theme) => ({
   container: {
@@ -39,14 +40,16 @@ const styles = (theme) => ({
     marginTop: "-4px",
   },
   clubwrapper: {
-    display: "flex",
-    marginTop: "-120px",
+    height: "50vh",
+    width: "10vw",
+    marginTop: "-55vh",
     position: "absolute",
-    alignItems: "flex-end",
   },
-  menuitemicon: {
-    height: "100%",
-    paddingRight: 10,
+  clubiconWrapper: {
+    position: "absolute",
+    bottom: "188px",
+    left: "50%",
+    marginLeft: "20px",
   },
 });
 
@@ -255,6 +258,7 @@ class GolfController extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     const { swingData, isSwinging, strokes, anchorEl, clubIndex } = this.state;
+    console.log("shouldComponentUpdate");
     if (nextState.isSwinging !== isSwinging) {
       return true;
     }
@@ -266,9 +270,13 @@ class GolfController extends Component {
       return true;
     }
     if (nextState.anchorEl !== anchorEl) {
+      console.log("yes anchorEI");
+
       return true;
     }
     if (nextState.clubIndex !== clubIndex) {
+      console.log("yes clubindex");
+
       return true;
     }
     const { game, playerKey } = this.props;
@@ -281,6 +289,7 @@ class GolfController extends Component {
     if (currentPlayer.state !== nextCurrentPlayer.state) {
       return true;
     }
+    console.log("false");
 
     return false;
   }
@@ -296,7 +305,7 @@ class GolfController extends Component {
   handleChange = (name) => (event) => {
     this.setState({
       [name]: event.target.value,
-      anchorEl: null,
+      // anchorEl: null,
     });
   };
 
@@ -439,6 +448,73 @@ class GolfController extends Component {
     const open = Boolean(anchorEl);
     const choosenClub = CLUBS[clubIndex];
     this.renderFrame();
+
+    const ClubSlider = withStyles({
+      thumb: {
+        width: 20,
+        height: 20,
+        marginLeft: "-10px !important",
+        marginBottom: "-8px !important",
+        backgroundColor: "#fffffff5",
+      },
+      active: {},
+      track: {
+        height: 4,
+      },
+      rail: {
+        height: 4,
+        opacity: 0.5,
+        backgroundColor: "#3880f",
+      },
+      mark: {
+        backgroundColor: "currentcolor",
+        height: 1,
+        width: 8,
+        marginTop: -3,
+        color: "#3880f",
+      },
+      markActive: {
+        opacity: 1,
+        backgroundColor: "currentcolor",
+      },
+      markLabel: {
+        color: "rgba(0, 0, 0, 0.87)",
+        fontWeight: 500,
+      },
+      markLabelActive: {
+        color: "rgba(0, 0, 0, 0.87)",
+      },
+    })(Slider);
+
+    function valuetext(value) {
+      return `${value}°C`;
+    }
+    const marks = [
+      {
+        value: 0,
+        label: CLUBS[0].name,
+      },
+      {
+        value: CLUBS.length - 1,
+        label: CLUBS[CLUBS.length - 1].name,
+      },
+    ];
+    function GolfThumbComponent(props) {
+      return <span {...props}></span>;
+    }
+    const handleChangeSlider = (event, newValue) => {
+      console.log("newvalue slider:" + newValue);
+      this.setState({
+        ["clubIndex"]: newValue,
+      });
+    };
+
+    // const [value, setValue] = React.useState(1);
+
+    // const handleChangeSlider2 = (event, newValue) => {
+    //   setValue(newValue);
+    // };
+
     return (
       <div className="phase-container">
         <div className={classes.container}>
@@ -449,7 +525,46 @@ class GolfController extends Component {
             width={canvasWidth}
           />
           <div className={classes.clubwrapper}>
-            <Button
+            {
+              //fixa stylen innan jag fixar logiken. större boll och slider.
+              /* använd klubbikonerna? kanske ha den som den var innan. detta
+            ersätter bara selecten. //vi visar alltså fortfarande ikon för vad
+            man valt? 
+            ultimata jag vill ha: 
+            En stor boll och lite bredare linje kanske. 
+            På bollen ska det stå vilken klubba man valt. ikon + namn(Driver, 7 iron, wedge, putter...)kolla på exemplet med custom airbnb för hur man gör. 
+              ^börja med ett enkelt test att det går att skriva current value i bollen och att det updateras medan man drar iden.. 
+              ^^om det inte fungerar med ovan tänkt så kolla en custom tooltip är möjlig? fanns några exempel fast med text? 
+              ^^ om det inte är möjligt så skriv ut alla klubbor på linjen bara och kör på det. markera tydligt vilken man valt. den har grön färg eller något.bold. 
+            Den ska vara stegad på alla möjliga klubbor. 
+            enda som ska stå på linjen ska vara ikonerna för driver och putter uppe och nere så man vet vilket håll man ska scrolla åt. 
+            */
+            }
+            <ClubSlider
+              value={clubIndex}
+              aria-label="golf club selector"
+              defaultValue={CLUBS.length - 1}
+              orientation="vertical"
+              marks={CLUBS.map((c) => ({
+                value: c.id,
+                label: c.name,
+              }))}
+              min={0}
+              max={CLUBS.length - 1}
+              step={1}
+              onChangeCommitted={handleChangeSlider}
+              // ThumbComponent={GolfThumbComponent}
+            />
+
+            {/* <Slider
+              orientation="vertical"
+              getAriaValueText={valuetext}
+              defaultValue={30}
+              marks={marks}
+              step={10}
+              aria-labelledby="vertical-slider"
+            /> */}
+            {/* <Button
               aria-owns={open ? "club-menu" : undefined}
               aria-haspopup="true"
               style={{ marginLeft: "-20px", marginRight: "-20px" }}
@@ -484,8 +599,17 @@ class GolfController extends Component {
             >
               <span>{choosenClub.name}</span>
               <img src={clubIcons[choosenClub.type]} alt="club" height="60" />
-            </Typography>
+            </Typography> */}
           </div>
+          <div className={classes.clubiconWrapper}>
+            <img
+              className={classes.clubicon}
+              src={clubIcons[choosenClub.type]}
+              alt="club"
+              height="60"
+            />
+          </div>
+
           <div
             className={classes.footer}
             style={{ backgroundColor: game.minigame.levelColor }}

@@ -1,6 +1,7 @@
 function generateGameId() {
-  let id = '';
-  const possible = 'ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789';
+  let id = "";
+  const possible =
+    "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789";
 
   for (let i = 0; i < 6; i++) {
     id += possible.charAt(Math.floor(Math.random() * possible.length));
