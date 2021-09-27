@@ -44,6 +44,7 @@ const styles = (theme) => ({
     width: "10vw",
     bottom: "210px",
     position: "absolute",
+    paddingRight: "50px",
   },
   clubiconWrapper: {
     position: "absolute",
@@ -169,6 +170,111 @@ class GolfController extends Component {
     ctx = canvas.getContext("2d");
     ctx.translate(0.5, 0.5);
     const that = this;
+
+    if (typeof DeviceMotionEvent.requestPermission === "function") {
+      DeviceMotionEvent.requestPermission()
+        .then((permissionState) => {
+          if (permissionState === "granted") {
+            window.addEventListener(
+              "devicemotion",
+              (e) => {
+                const event = e || window.event;
+                event.preventDefault();
+                event.stopPropagation();
+                const {
+                  isSwinging,
+                  swingData,
+                  highestAcceleration,
+                  clubIndex,
+                } = that.state;
+                if (isSwinging) {
+                  const { x, y, z } = event.acceleration;
+                  swingData.push({
+                    x: Math.round(x * 2),
+                    y: Math.round(y * 2),
+                    z: Math.round(z * 2),
+                  });
+                  // this.drawSwing([{ x: Math.round(x * 2), y: Math.round(y * 2), z: Math.round(z * 2) }]);
+
+                  // hur är detta legit? både x och z kan ju vara minusvärden? jag borde lägga om dem till positiva?
+                  // eller kan jag använda detta för att bara mäta nersvingen?? genom att bara läsa av negative eller positiva värden
+                  // vilekt som nu är neråt
+                  // måste göra flera tester, ska y inte tas med?
+                  // koppla i telefonen och debuga
+                  const xpower = Math.abs(x);
+                  const zpower = Math.abs(z);
+
+                  const power = Math.floor(xpower + zpower);
+                  // const power2 = Math.floor(Math.abs(y) + Math.abs(z));
+                  // const power3 = Math.floor(Math.abs(x) + Math.abs(y));
+
+                  // && util.validateSwingMovement(event.acceleration, clubIndex)
+                  if (power > highestAcceleration) {
+                    that.setState(() => ({
+                      highestAcceleration: power,
+                      swingData,
+                    }));
+                  } else {
+                    that.setState({ swingData });
+                  }
+                }
+              },
+              true
+            );
+          } else {
+            alert("device motion permission not granted");
+          }
+        })
+        .catch(console.error);
+    } else {
+      window.addEventListener(
+        "devicemotion",
+        (e) => {
+          const event = e || window.event;
+          event.preventDefault();
+          event.stopPropagation();
+          const {
+            isSwinging,
+            swingData,
+            highestAcceleration,
+            clubIndex,
+          } = that.state;
+          if (isSwinging) {
+            const { x, y, z } = event.acceleration;
+            swingData.push({
+              x: Math.round(x * 2),
+              y: Math.round(y * 2),
+              z: Math.round(z * 2),
+            });
+            // this.drawSwing([{ x: Math.round(x * 2), y: Math.round(y * 2), z: Math.round(z * 2) }]);
+
+            // hur är detta legit? både x och z kan ju vara minusvärden? jag borde lägga om dem till positiva?
+            // eller kan jag använda detta för att bara mäta nersvingen?? genom att bara läsa av negative eller positiva värden
+            // vilekt som nu är neråt
+            // måste göra flera tester, ska y inte tas med?
+            // koppla i telefonen och debuga
+            const xpower = Math.abs(x);
+            const zpower = Math.abs(z);
+
+            const power = Math.floor(xpower + zpower);
+            // const power2 = Math.floor(Math.abs(y) + Math.abs(z));
+            // const power3 = Math.floor(Math.abs(x) + Math.abs(y));
+
+            // && util.validateSwingMovement(event.acceleration, clubIndex)
+            if (power > highestAcceleration) {
+              that.setState(() => ({
+                highestAcceleration: power,
+                swingData,
+              }));
+            } else {
+              that.setState({ swingData });
+            }
+          }
+        },
+        true
+      );
+    }
+
     canvas.addEventListener(
       "touchstart",
       (e) => {
@@ -206,49 +312,6 @@ class GolfController extends Component {
       false
     );
 
-    window.addEventListener(
-      "devicemotion",
-      (e) => {
-        const event = e || window.event;
-        event.preventDefault();
-        event.stopPropagation();
-        const {
-          isSwinging,
-          swingData,
-          highestAcceleration,
-          clubIndex,
-        } = that.state;
-        if (isSwinging) {
-          const { x, y, z } = event.acceleration;
-          swingData.push({
-            x: Math.round(x * 2),
-            y: Math.round(y * 2),
-            z: Math.round(z * 2),
-          });
-          // this.drawSwing([{ x: Math.round(x * 2), y: Math.round(y * 2), z: Math.round(z * 2) }]);
-
-          // hur är detta legit? både x och z kan ju vara minusvärden? jag borde lägga om dem till positiva?
-          // eller kan jag använda detta för att bara mäta nersvingen?? genom att bara läsa av negative eller positiva värden
-          // vilekt som nu är neråt
-          // måste göra flera tester, ska y inte tas med?
-          // koppla i telefonen och debuga
-          const xpower = Math.abs(x);
-          const zpower = Math.abs(z);
-
-          const power = Math.floor(xpower + zpower);
-          // const power2 = Math.floor(Math.abs(y) + Math.abs(z));
-          // const power3 = Math.floor(Math.abs(x) + Math.abs(y));
-
-          // && util.validateSwingMovement(event.acceleration, clubIndex)
-          if (power > highestAcceleration) {
-            that.setState(() => ({ highestAcceleration: power, swingData }));
-          } else {
-            that.setState({ swingData });
-          }
-        }
-      },
-      true
-    );
     this.renderFrame();
   }
 
